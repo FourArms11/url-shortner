@@ -1,6 +1,8 @@
 const express = require('express'); //Loads the Express framework to create a web server.
 const path = require('path'); // Node.js built-in module to handle file/directory paths across OS platforms.
 const app = express();//Creates your Express application instance — this is your actual server object.
+const cookieParser = require('cookie-parser');
+const {restrictToLoggedinUserOnly} = require('./middlewares/auth')
 const PORT = 3000; //Stores the port number your server will listen on.
 
 
@@ -27,11 +29,13 @@ app.set('views', path.resolve('./views'));//location of views
 
 app.use(express.json()); //middleware Parses incoming JSON request bodies (e.g., from API calls / Postman)
 app.use(express.urlencoded({extended: false })); //to support forms data Parses HTML form submissions
+app.use(cookieParser());
 
 
 
 //Any request to /url/* is handed off to your urlRoute router.
-app.use('/url', urlRoute);//This tells Express that **any request starting with `/url`** should be handled by your `urlRoute` router file.
+//inline middleware inside /url
+app.use('/url', restrictToLoggedinUserOnly , urlRoute);//This tells Express that **any request starting with `/url`** should be handled by your `urlRoute` router file.
 //Root-level requests go to staticRoute (typically serves your home page).
 app.use('/', staticRoute);
 
@@ -58,10 +62,10 @@ app.get('/test', async (req,res) => {
 //                 </body>
 //             </head>
 //         </html>`);
-})
+})  
 
 app.get('/:shortId', async (req, res) => {
-    const shortId =  req.params.shortId;
+    const shortId =  req.params.shortId;    
     const entry = await URL.findOneAndUpdate({
         shortId
     },
