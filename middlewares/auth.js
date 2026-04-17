@@ -1,4 +1,5 @@
-const { getUser } = require('../services/auth');
+const { getUser } = require('../services/auth'); 
+
 
 // This acts as an invisible Security Guard holding a clipboard. It runs BEFORE allowing access to restricted paths (like '/url').
 async function restrictToLoggedinUserOnly(req, res, next) {

@@ -14,6 +14,7 @@ const urlSchema = new mongoose.Schema({
     visitHistory: [
         // Each time a URL is clicked, we push a new object into this array with the exact Date and Time.
         { timestamp: { type: Number } } 
+
     ], 
     createdBy: {
         // This is a special relational type. It stores the secret _id of the User who generated this specific URL.
